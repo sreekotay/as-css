@@ -17,19 +17,19 @@ Component-scoped CSS at runtime with zero build tooling.
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/as-css@1/dist/as-css.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@sreekotay/as-css@1/dist/as-css.min.js"></script>
 ```
 
 or
 
 ```html
-<script src="https://unpkg.com/as-css@1/dist/as-css.min.js"></script>
+<script src="https://unpkg.com/@sreekotay/as-css@1/dist/as-css.min.js"></script>
 ```
 
 ### npm + self-hosted
 
 ```bash
-npm install as-css
+npm install @sreekotay/as-css
 ```
 
 Then serve:
@@ -53,7 +53,7 @@ Version guidance:
 ## Minimal Example
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/as-css@1/dist/as-css.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@sreekotay/as-css@1/dist/as-css.min.js"></script>
 
 <div class="card">
   <style as-css>
@@ -205,6 +205,6 @@ npm publish
 
 Verify:
 
-- `https://www.npmjs.com/package/as-css`
-- `https://cdn.jsdelivr.net/npm/as-css@latest/dist/as-css.min.js`
-- `https://unpkg.com/as-css@latest/dist/as-css.min.js`
+- `https://www.npmjs.com/package/@sreekotay/as-css`
+- `https://cdn.jsdelivr.net/npm/@sreekotay/as-css@latest/dist/as-css.min.js`
+- `https://unpkg.com/@sreekotay/as-css@latest/dist/as-css.min.js`

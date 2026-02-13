@@ -1,5 +1,5 @@
 {
-  "name": "as-css",
+  "name": "@sreekotay/as-css",
   "version": "1.0.0",
   "description": "Component-scoped CSS that runs in the browser without build tooling.",
   "type": "module",
