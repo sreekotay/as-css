@@ -2,7 +2,7 @@
 
 Component-scoped CSS that works at runtime with zero build tools. Write normal CSS that automatically gets scoped to its parent element, with support for named reusable styles and responsive shortcuts.
 
-**Examples:** [`examples/index.html`](./examples/index.html) (local) | [`docs/index.html`](./docs/index.html) (GitHub Pages build output)
+**Examples:** [Live on GitHub Pages](https://skotay.github.io/as-css/) | [`examples/index.html`](./examples/index.html) (local)
 
 ## Benefits
 
