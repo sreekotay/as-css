@@ -4,6 +4,8 @@
   "description": "Component-scoped CSS that runs in the browser without build tooling.",
   "type": "module",
   "main": "src/as-css.js",
+  "unpkg": "dist/as-css.min.js",
+  "jsdelivr": "dist/as-css.min.js",
   "scripts": {
     "build": "npm run build:as-css",
     "build:as-css": "terser src/as-css.js -o dist/as-css.min.js --compress --mangle --source-map",

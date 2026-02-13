@@ -16,12 +16,66 @@ Component-scoped CSS that works at runtime with zero build tools. Write normal C
 
 ## Getting Started
 
-1. **Include the file:** `<script src="./dist/as-css.min.js"></script>` (or `./src/as-css.js` for local dev)
-2. **Choose your syntax:**
-   - **`<as-style>`** - Custom elements for maximum performance
-   - **`<style as-css>`** - Standard elements with full syntax highlighting
+Use one of these delivery options:
 
-That's it! Your CSS is now component-scoped.
+### Option A: CDN (recommended for quick adoption)
+
+After publishing to npm, use either CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/as-css@1/dist/as-css.min.js"></script>
+```
+
+```html
+<script src="https://unpkg.com/as-css@1/dist/as-css.min.js"></script>
+```
+
+### Option B: npm + self-hosted asset (recommended for production control)
+
+```bash
+npm install as-css
+```
+
+Then copy or serve `node_modules/as-css/dist/as-css.min.js` from your static assets and include:
+
+```html
+<script src="/assets/as-css.min.js"></script>
+```
+
+### Option C: local development in this repo
+
+```html
+<script src="./src/as-css.js"></script>
+```
+
+### Version pinning
+
+- Use `@1` for automatic patch/minor updates within major version 1
+- Use `@1.0.0` for strict reproducibility
+- Avoid unpinned `@latest` in production
+
+Then choose your syntax:
+
+- **`<as-style>`** - Custom elements for maximum performance
+- **`<style as-css>`** - Standard elements with full syntax highlighting
+
+That's it. Your CSS is now component-scoped.
+
+## Publish and CDN Release Checklist
+
+Use this sequence for each release:
+
+```bash
+npm run build
+npm version patch
+npm publish
+```
+
+Then verify package and CDN availability:
+
+- npm package: `https://www.npmjs.com/package/as-css`
+- jsDelivr file: `https://cdn.jsdelivr.net/npm/as-css@latest/dist/as-css.min.js`
+- unpkg file: `https://unpkg.com/as-css@latest/dist/as-css.min.js`
 
 ## GitHub Pages
 
