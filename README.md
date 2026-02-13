@@ -2,6 +2,8 @@
 
 Component-scoped CSS that works at runtime with zero build tools. Write normal CSS that automatically gets scoped to its parent element, with support for named reusable styles and responsive shortcuts.
 
+**Examples:** [`examples/index.html`](./examples/index.html) (local) | [`docs/index.html`](./docs/index.html) (GitHub Pages build output)
+
 ## Benefits
 
 - ✅ **Zero build tools** - Works directly in the browser
