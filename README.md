@@ -2,7 +2,7 @@
 
 Component-scoped CSS that works at runtime with zero build tools. Write normal CSS that automatically gets scoped to its parent element, with support for named reusable styles and responsive shortcuts.
 
-**Examples:** [Live on GitHub Pages](https://skotay.github.io/as-css/) | [`examples/index.html`](./examples/index.html) (local)
+**Examples:** [Live on GitHub Pages](https://sreekotay.github.io/as-css/) | [`examples/index.html`](./examples/index.html) (local)
 
 ## Benefits
 
@@ -25,10 +25,10 @@ That's it! Your CSS is now component-scoped.
 
 ## GitHub Pages
 
-Examples can be published to GitHub Pages with:
+Build Pages output locally with:
 
 ```bash
-npm run build:pages
+npm run pages
 ```
 
 This generates a `docs/` folder that includes:
@@ -38,7 +38,9 @@ This generates a `docs/` folder that includes:
 - `docs/src/as-css.js`
 - `docs/dist/as-css.min.js`
 
-Then set repository Pages source to `main` branch, `/docs` folder.
+Automatic deploy is also configured via GitHub Actions on push to `main`:
+- Workflow: `.github/workflows/pages.yml`
+- In repo settings, set **Pages** source to **GitHub Actions**
 
 ### Example Entry Points
 
@@ -97,7 +99,7 @@ The above example gets transformed at runtime to:
 - 📱 **Responsive Shortcuts** - `@media sm-lt`, `@media lg-gt` etc. expand to proper breakpoints
 - 🎬 **Animation Safety** - Keyframes automatically scoped, preventing animation name conflicts
 - 🎨 **CSS Variables** - Custom properties work naturally with automatic component isolation
-- 🧩 **Shared Name Styles** - Create reusable ***SCOPED*** CSS components, reference with `name="theme"`
+- 🧩 **Shared Name Styles** - Create reusable ***SCOPED*** CSS components, reference with `as-class="theme"`
 - ⚡ **Dynamic Updates** - Add `dynamic` attribute for styles that change after page load  
 - 🛡️ **Robustness** - Handles complex CSS edge cases, quoted content, functions, escapes
 
@@ -208,12 +210,12 @@ Named styles support strong scoping with automatic inheritance! When a named sty
 </style>
 
 <!-- ✅ All references automatically inherit strong behavior -->
-<div class="card-1" as-css-name="bootstrap-card">
+<div class="card-1" as-class="bootstrap-card">
   <h3>Card 1</h3>
   <button class="btn">Strong Button</button>
 </div>
 
-<div class="card-2" as-css-name="bootstrap-card">
+<div class="card-2" as-class="bootstrap-card">
   <h3>Card 2</h3>
   <button class="btn">Also Strong Button</button>
 </div>
@@ -257,8 +259,9 @@ Common transformations that happen automatically:
 
 /* Descendant scoping */
 .child → .as--1 .child              /* Descendant elements */
-:hover → .as--1:hover               /* Container pseudo-states */
-::before → .as--1::before           /* Container pseudo-elements */
+&:hover → .as--1:hover              /* Container pseudo-state (explicit container reference) */
+:hover → .as--1 :hover              /* Descendant pseudo-state */
+::before → .as--1::before           /* Container pseudo-element */
 
 /* Complex selectors */
 :where(h1, h2) → .as--1 :where(h1, h2)     /* Functional pseudo-classes */
