@@ -1,5 +1,7 @@
 # as-css
 
+Inspired by: https://github.com/gnat/css-scope-inline
+
 Component-scoped CSS at runtime with zero build tooling.
 
 **Examples:** [Live](https://sreekotay.github.io/as-css/) | [`examples/demo.html`](./examples/demo.html) | [`examples/edge-case-test.html`](./examples/edge-case-test.html)
