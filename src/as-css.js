@@ -40,16 +40,29 @@
       } else if (r.type === CSSRule.KEYFRAMES_RULE && !r.name.startsWith('var(')) r.name = `${scopeId}-${r.name}`;
       else if (r.type === 25 || 'cssRules' in r) rewriteRules(r.cssRules, scope, scopeId); // 25 = CSSRule.LAYER_BLOCK_RULE
   }
-  function addScope(styleEl, parentEl, scope, newCSS) {
+  const SHEET_RETRY_MAX = 8;
+  const clearRetry = styleEl => { if (styleEl._retryTimer) { clearTimeout(styleEl._retryTimer); styleEl._retryTimer = 0; } };
+  function addScope(styleEl, parentEl, scope, newCSS, generation, retryCount = 0) {
     if (styleEl.tagName !== 'STYLE') styleEl = (s => (s.textContent = styleEl.textContent, [...styleEl.attributes].forEach(a => s.setAttribute(a.name, a.value)), styleEl.replaceWith(s), s))(document.createElement('style'));
+    if (generation == null) { styleEl._scopeGeneration = generation = (styleEl._scopeGeneration || 0) + 1; clearRetry(styleEl); }
+    else if (styleEl._scopeGeneration !== generation) return; // stale retry; newer generation already queued
     const css = newCSS || styleEl.textContent, scopeId = scope; let fullScope = '.' + scope;
     const processedCSS = css.replace(BP_RE, (match, k) => {const t = match.startsWith('@media') ? '@media' : '@container'; return t + ' ' + (aw.breakpoints[k] || k); });
     styleEl.textContent = processedCSS;
     if (parentEl !== document.head && !parentEl.classList.contains(scopeId)) parentEl.classList.add(scopeId);
-    if (styleEl.hasAttribute('strong')) { styleEl.parentNode.classList.add('as-strong'); fullScope = fullScope + '.as-strong'; }
+    if (styleEl.hasAttribute('strong')) { if (parentEl !== document.head && !parentEl.classList.contains('as-strong')) parentEl.classList.add('as-strong'); fullScope = fullScope + '.as-strong'; }
     styleEl.setAttribute('as-css', scopeId);
     try {
-      if (!styleEl.sheet) { styleEl.offsetHeight; styleEl.setAttribute('as-css', ''); debugger; schedule(); return; } // Re-queue if sheet not ready
+      if (!styleEl.sheet) {
+        styleEl.offsetHeight; if (retryCount < SHEET_RETRY_MAX && styleEl.isConnected) {
+          styleEl._retryTimer = setTimeout(() => { styleEl._retryTimer = 0;
+            if (styleEl._scopeGeneration !== generation) return;
+            addScope(styleEl, parentEl, scope, newCSS, generation, retryCount + 1);
+          }, 0);
+        } else console.warn('Scoped CSS: stylesheet not ready after retries', { scopeId, retries: retryCount, generation });
+        return;
+      }
+      clearRetry(styleEl);
       const { cssRules } = styleEl.sheet;
       rewriteRules(cssRules, fullScope, scopeId);
       if (!styleEl.hasAttribute('dynamic')) styleEl.textContent = Array.from(cssRules).map(r => r.cssText).join('\n');

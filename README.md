@@ -31,12 +31,12 @@ Build Pages output locally with:
 npm run pages
 ```
 
-This generates a `docs/` folder that includes:
-- `docs/index.html` (examples landing page)
-- `docs/examples/demo.html`
-- `docs/examples/edge-case-test.html`
-- `docs/src/as-css.js`
-- `docs/dist/as-css.min.js`
+This generates a `.pages/` folder for GitHub Pages artifact upload:
+- `.pages/index.html` (site landing page)
+- `.pages/examples/demo.html`
+- `.pages/examples/edge-case-test.html`
+- `.pages/src/as-css.js`
+- `.pages/dist/as-css.min.js`
 
 Automatic deploy is also configured via GitHub Actions on push to `main`:
 - Workflow: `.github/workflows/pages.yml`
@@ -47,9 +47,9 @@ Automatic deploy is also configured via GitHub Actions on push to `main`:
 - Local examples index: `./examples/index.html`
 - Local demo: `./examples/demo.html`
 - Local edge-case suite: `./examples/edge-case-test.html`
-- Pages index after build: `./docs/index.html`
-- Pages demo after build: `./docs/examples/demo.html`
-- Pages edge-case suite after build: `./docs/examples/edge-case-test.html`
+- Pages artifact index after build: `./.pages/index.html`
+- Pages artifact demo after build: `./.pages/examples/demo.html`
+- Pages artifact edge-case suite after build: `./.pages/examples/edge-case-test.html`
 
 ## Quick Start
 

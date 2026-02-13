@@ -9,7 +9,7 @@
     "build:as-css": "terser src/as-css.js -o dist/as-css.min.js --compress --mangle --source-map",
     "build:as-css:clean": "terser src/as-css.js -o dist/as-css.min.js --compress --mangle",
     "watch": "chokidar 'src/as-css.js' -c 'npm run build:as-css'",
-    "build:pages": "npm run build && rm -rf docs && mkdir -p docs/examples docs/src docs/dist && cp examples/*.html docs/examples/ && cp src/as-css.js docs/src/ && cp dist/as-css.min.js dist/as-css.min.js.map docs/dist/ && cp examples/index.html docs/index.html && touch docs/.nojekyll",
+    "build:pages": "npm run build && rm -rf .pages && mkdir -p .pages/examples .pages/src .pages/dist && cp examples/*.html .pages/examples/ && cp src/as-css.js .pages/src/ && cp dist/as-css.min.js dist/as-css.min.js.map .pages/dist/ && cp index.html .pages/index.html && touch .pages/.nojekyll",
     "pages": "npm run build:pages"
   },
   "keywords": [

@@ -88,7 +88,7 @@
             <li>List item 2</li>
         </ul>
         <div class="expected">
-            Expected: :hover → .as--X:hover, ::before → .as--X::before (no extra space)
+            Expected: :hover → .as--X :hover (descendant), ::before → .as--X::before (container pseudo-element)
         </div>
     </div>
 
@@ -363,31 +363,31 @@
         </div>
     </div>
 
-    <!-- Test 16: Named Style Definition with Strong (should warn) -->
+    <!-- Test 16: Named Style Definition with Strong -->
     <div class="test-section named-strong-definition">
-        <div class="test-title">Test 16: Named Style Definition with Strong (should warn)</div>
+        <div class="test-title">Test 16: Named Style Definition with Strong</div>
         <style as-css as-name="strong-theme" strong>
             & { background: orange; }
             .title { color: darkred; }
             .warning { border: 1px solid red; }
         </style>
-        <div class="title">Named style with strong (should warn)</div>
-        <div class="warning">Check console for warning</div>
+        <div class="title">Named style definition with strong</div>
+        <div class="warning">Used to validate strong named-style behavior</div>
         <div class="expected">
-            Expected: Console warning about strong being ignored on definitions, still uses class scoping
+            Expected: Strong named-style behavior is validated by Test 19 and runtime checks
         </div>
     </div>
 
-    <!-- Test 17: Strong Scoping Limitation Documentation -->
+    <!-- Test 17: Runtime Issue Check -->
     <div class="test-section strong-limitation">
-        <div class="test-title">Test 17: Strong Scoping Limitation</div>
+        <div class="test-title">Test 17: Runtime Issue Check</div>
         <div class="info">
-            <p><strong>❌ Strong scoping does NOT work with named styles</strong></p>
-            <p>Named styles must be shareable, so they always use class scoping.</p>
-            <p>Only inline component styles can use <code>strong</code> for ID scoping.</p>
+            <p><strong>Known runtime issue check:</strong> <code>&lt;head&gt;</code> should not receive <code>as-strong</code> class.</p>
+            <p>If this test fails in console, strong named-style handling is leaking global class state.</p>
+            <p>This section intentionally validates runtime correctness, not visual styling.</p>
         </div>
         <div class="expected">
-            Expected: Documentation test - no actual CSS processing
+            Expected: <code>document.head.classList.contains('as-strong')</code> should be false
         </div>
     </div>
 
@@ -457,9 +457,22 @@
         </div>
     </div>
 
+    <!-- Test 20: Dynamic Latest Write Wins -->
+    <div class="test-section dynamic-generation-guard">
+        <div class="test-title">Test 20: Dynamic Latest Write Wins</div>
+        <style id="dynamic-generation-style" as-css dynamic>
+            & { background: rgb(255, 0, 0); }
+            .probe { color: white; }
+        </style>
+        <div class="probe">Rapid dynamic rewrites should keep the latest update.</div>
+        <div class="expected">
+            Expected: After rapid updates, processed CSS contains only the final payload
+        </div>
+    </div>
+
     <script>
         // Wait for DOM and styles to process
-        setTimeout(() => {
+        setTimeout(async () => {
             const startTime = performance.now();
             console.log('=== as-css Edge Case Test Results ===');
             
@@ -477,6 +490,24 @@
             // Get all processed style elements
             const processedStyles = document.querySelectorAll('style[as-css]');
             let totalTests = 0, passedTests = 0;
+
+            // Test 20: Validate rapid dynamic updates settle on latest write
+            const test20Style = document.getElementById('dynamic-generation-style');
+            if (test20Style) {
+                console.log(`\nTest 20: Dynamic Latest Write Wins`);
+                totalTests += 2;
+                test20Style.textContent = '& { background: rgb(0, 128, 0); } .probe { color: white; }';
+                test20Style.textContent = '& { background: rgb(0, 0, 255); } .probe { color: white; }';
+                test20Style.textContent = '& { background: rgb(128, 0, 128); } .probe { color: white; }';
+                await new Promise(resolve => setTimeout(resolve, 20));
+                const finalCss = test20Style.textContent;
+                const hasFinal = finalCss.includes('rgb(128, 0, 128)');
+                const hasStale = finalCss.includes('rgb(255, 0, 0)') || finalCss.includes('rgb(0, 128, 0)') || finalCss.includes('rgb(0, 0, 255)');
+                passedTests += hasFinal ? 1 : 0;
+                console.log(`  ${hasFinal ? '✅' : '❌'} Final dynamic payload retained`);
+                passedTests += !hasStale ? 1 : 0;
+                console.log(`  ${!hasStale ? '✅' : '❌'} No stale payloads remain after rewrite burst`);
+            }
             
             // Special handling for Test 19 (Named Style Strong Inheritance)
             const test19Section = document.querySelector('.test-section.named-strong-inheritance');
@@ -669,20 +700,19 @@
                 }
                 
                 else if (testTitle.includes('Named Style Definition with Strong')) {
-                    console.log('Testing named style definition with strong (should warn):');
+                    console.log('Testing named style definition with strong:');
                     totalTests += 2;
-                    // Check if warning was logged (we can't directly test console.warn, but we can check the CSS output)
+                    // Validate class-based strong scoping output for named style definitions
                     passedTests += assertTransformation(css, '& → .scope (not #scope)', `.${scopeClass} {`) ? 1 : 0;
                     passedTests += assertTransformation(css, 'Uses class scoping despite strong', `.${scopeClass} .title`) ? 1 : 0;
-                    console.log('  ⚠️  Check console for warning about strong being ignored on definitions');
                 }
                 
-                else if (testTitle.includes('Strong Scoping Limitation')) {
-                    console.log('Testing strong scoping limitation documentation:'); 
+                else if (testTitle.includes('Runtime Issue Check')) {
+                    console.log('Testing runtime issue checks:');
                     totalTests += 1;
-                    // This is just a documentation test - always passes
-                    passedTests += 1;
-                    console.log(`  ✅ Documentation: Strong scoping does NOT work with named styles`);
+                    const headHasStrong = document.head.classList.contains('as-strong');
+                    passedTests += !headHasStrong ? 1 : 0;
+                    console.log(`  ${!headHasStrong ? '✅' : '❌'} document.head should NOT have as-strong: ${headHasStrong}`);
                 }
                 
                 else if (testTitle.includes('Normal Scoping (for comparison)')) {
