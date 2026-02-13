@@ -21,6 +21,32 @@ Component-scoped CSS that works at runtime with zero build tools. Write normal C
 
 That's it! Your CSS is now component-scoped.
 
+## GitHub Pages
+
+Examples can be published to GitHub Pages with:
+
+```bash
+npm run build:pages
+```
+
+This generates a `docs/` folder that includes:
+- `docs/index.html` (examples landing page)
+- `docs/examples/demo.html`
+- `docs/examples/edge-case-test.html`
+- `docs/src/as-css.js`
+- `docs/dist/as-css.min.js`
+
+Then set repository Pages source to `main` branch, `/docs` folder.
+
+### Example Entry Points
+
+- Local examples index: `./examples/index.html`
+- Local demo: `./examples/demo.html`
+- Local edge-case suite: `./examples/edge-case-test.html`
+- Pages index after build: `./docs/index.html`
+- Pages demo after build: `./docs/examples/demo.html`
+- Pages edge-case suite after build: `./docs/examples/edge-case-test.html`
+
 ## Quick Start
 
 ### Option 1: Full Syntax Highlighting (`<style as-css>`)
