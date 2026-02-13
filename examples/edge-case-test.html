@@ -509,7 +509,7 @@
                 console.log(`  ${!hasStale ? '✅' : '❌'} No stale payloads remain after rewrite burst`);
             }
             
-            // Special handling for Test 19 (Named Style Strong Inheritance)
+            // Test 19 is handled here because named styles are hoisted to <head>
             const test19Section = document.querySelector('.test-section.named-strong-inheritance');
             if (test19Section) {
                 console.log(`\nTest 19: Named Style Strong Inheritance`);
@@ -534,11 +534,7 @@
                 const references = test19Section.querySelectorAll('[class*="card-reference"]');
                 
                 references.forEach((ref, index) => {
-                    // Find the scope from any style element or comment in this reference
-                    const comment = ref.querySelector('comment') || 
-                                  Array.from(ref.childNodes).find(node => node.nodeType === 8); // Comment node
-                    
-                    // Try to extract scope from the element's classes or from theme style
+                    // Extract scope from the reference element classes
                     const refClassList = Array.from(ref.classList);
                     const refScope = refClassList.find(cls => cls.startsWith('as--'));
                     const hasScope = !!refScope;
@@ -551,7 +547,7 @@
                 });
             }
 
-            processedStyles.forEach((style, index) => {
+            processedStyles.forEach((style) => {
                 const scopeClass = style.getAttribute('as-css');
                 const testSection = style.closest('.test-section');
                 
@@ -725,41 +721,6 @@
                     passedTests += hasClass ? 1 : 0;
                     console.log(`  ${hasClass ? '✅' : '❌'} Element has class: ${scopeClass}`);
                     passedTests += assertTransformation(css, '& → .scope', `.${scopeClass.replace(/^\./, '')} {`) ? 1 : 0;
-                }
-                
-                else if (testTitle.includes('Named Style Strong Inheritance')) {
-                    console.log('Testing named style strong inheritance:');
-                    
-                    // Check the CSS in head for the strong-card-theme definition
-                    const headStyles = document.head.querySelectorAll('style[as-css]');
-                    const themeStyle = Array.from(headStyles).find(s => s.textContent.includes('linear-gradient'));
-                    
-                    if (themeStyle) {
-                        const themeCss = themeStyle.textContent;
-                        const themeScope = themeStyle.getAttribute('as-css');
-                        totalTests += 3;
-                        passedTests += assertTransformation(themeCss, 'Definition uses .scope.as-strong', `.${themeScope}.as-strong {`) ? 1 : 0;
-                        passedTests += assertTransformation(themeCss, 'Card title with strong scoping', `.${themeScope}.as-strong .card-title`) ? 1 : 0;
-                        passedTests += assertTransformation(themeCss, 'Hover with strong scoping', `.${themeScope}.as-strong:hover`) ? 1 : 0;
-                    } else {
-                        console.log('  ❌ Could not find theme style in head');
-                        totalTests += 3;
-                    }
-                    
-                    // Check that all reference elements have both scope class and as-strong class
-                    const references = testSection.querySelectorAll('[class*="card-reference"]');
-                    totalTests += references.length * 2; // 2 checks per reference
-                    
-                    references.forEach((ref, index) => {
-                        const refScope = ref.querySelector('style[as-css]')?.getAttribute('as-css');
-                        const hasScope = ref.classList.contains(refScope);
-                        const hasStrong = ref.classList.contains('as-strong');
-                        
-                        passedTests += hasScope ? 1 : 0;
-                        console.log(`  ${hasScope ? '✅' : '❌'} Reference ${index + 1} has scope class: ${refScope}`);
-                        passedTests += hasStrong ? 1 : 0;
-                        console.log(`  ${hasStrong ? '✅' : '❌'} Reference ${index + 1} has as-strong class: ${hasStrong}`);
-                    });
                 }
                 
                 // Verify the parent element has the scope class

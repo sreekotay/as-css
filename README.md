@@ -16,7 +16,7 @@ Component-scoped CSS that works at runtime with zero build tools. Write normal C
 
 ## Getting Started
 
-1. **Include the file:** `<script src="as-css.js"></script>`
+1. **Include the file:** `<script src="./dist/as-css.min.js"></script>` (or `./src/as-css.js` for local dev)
 2. **Choose your syntax:**
    - **`<as-style>`** - Custom elements for maximum performance
    - **`<style as-css>`** - Standard elements with full syntax highlighting
@@ -55,7 +55,7 @@ Automatic deploy is also configured via GitHub Actions on push to `main`:
 
 ### Option 1: Full Syntax Highlighting (`<style as-css>`)
 ```html
-<script src="as-css.js"></script>
+<script src="./dist/as-css.min.js"></script>
 
 <div class="card">
   <style as-css>
