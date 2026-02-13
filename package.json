@@ -1,0 +1,32 @@
+{
+  "name": "as-css",
+  "version": "1.0.0",
+  "description": "Component-scoped CSS that runs in the browser without build tooling.",
+  "type": "module",
+  "main": "src/as-css.js",
+  "scripts": {
+    "build": "npm run build:as-css",
+    "build:as-css": "terser src/as-css.js -o dist/as-css.min.js --compress --mangle --source-map",
+    "build:as-css:clean": "terser src/as-css.js -o dist/as-css.min.js --compress --mangle",
+    "watch": "chokidar 'src/as-css.js' -c 'npm run build:as-css'"
+  },
+  "keywords": [
+    "css",
+    "scoped-css",
+    "web-components",
+    "runtime",
+    "frontend"
+  ],
+  "author": "Sree Kotay",
+  "license": "MIT",
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "terser": "^5.24.0"
+  },
+  "files": [
+    "src/as-css.js",
+    "dist/as-css.min.js",
+    "dist/as-css.min.js.map",
+    "README.md"
+  ]
+}

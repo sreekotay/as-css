@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>🌘 CSS Scope Inline Test Page</title>
+		<!-- ... or add as inline <script> ! -->
+		<script src="../src/as-css.js"></script>
+		<meta http-equiv="cache-control" content="no-cache">
+		<style>
+			*,*::before,*::after { margin: 0; box-sizing: border-box; } /* Reset */
+			html {
+				font-size: 10px; /* Root size. Usage: 1.8rem = 18px (1rem = 10px) */
+				text-size-adjust: none; /* Reset auto size. */
+				background: #222;
+				color: #ccc;
+				margin:0; padding:0;
+			}
+			body { font-size: 2rem } /* 2rem = 20px in our setup. */
+			html button { font-size: 2rem; cursor: pointer; color: #fff; text-shadow: 0 2px #000000AA; padding: 2rem 2.4rem; margin: 2rem; background: hsl(345 100% 47%); border: 0; border-bottom: 0.5rem solid hsl(345 100% 28%); border-radius: 12px; transition: all 0.3s; }
+			html button:hover { background: hsl(345 100% 60%); transform: translateY(-0.2rem) }
+			html button:active { transform: translateY(0.2rem) }
+		</style>
+	</head>
+	<body>
+		<div>💩 No style.</div>
+
+		<div>
+			<style as-css> /* Simple example. */
+			    & { margin: 20px; }
+				div { font-size: 5rem; }
+			</style>
+			<div>👻</div>
+		</div>
+
+		<div>
+			<style as-css dynamic>
+				/* Flat, 1 selector style. Really easy. We recommend it! '*' is the parent selector. */
+				& { font-family: 'Noto Sans', sans-serif; background: hsl(264 62% 20%); color: #fff; }
+				ol { padding: 5px 0; }
+				ol li { list-style: disc; padding: 4px; border-radius: 12px; margin: 4px 20px }
+				ol li[n1] { background: hsl(264 50% 50%) }
+				ol li[n2] { background: hsl(264 80% 50%); }
+				
+				/* Nested, 1 selector style. Possible! But visually busy. */
+				& { border:none; border-radius: 12px; box-shadow: 0 2px 5px #00000044; padding: 10px 20px; margin: 20px;
+					& span { background: hsl(264 90% 90%); color: hsl(264 30% 40%); padding: 16px 20px; border-radius: 8px; box-shadow: 0 0 5px hsl(0 0% 0% / 20%);
+						&::before { content:'🔮'; padding: 0 1ch 0 0; }
+					}
+				}
+
+				/* Animations */
+				& { animation: as-me 2s ease-in-out infinite }
+				@keyframes as-me { /* ♻️ Looped animation @keyframes can be scoped! .. prefix with as-me or as-me-NAME for more names! */
+					0% { transform: translateY(0px); }
+					50% { transform: translateY(20px); }
+					100% { transform: translateY(0px); }
+				}
+			</style>
+			<style>
+				/* Global CSS must be scoped separately. */
+				h1, h2, h3 { font-size: 3rem; margin: 20px 0; }
+			</style>
+			<h1>🛸 Scoped style using automatically</h1>
+			<ol>
+				<li>Use modern <span>Nested CSS</span>
+				<li n1>👽 Automatic scoped CSS
+				<li n2>💀 Automatic scoped CSS
+				<li>⚡ Use live editing in the browser inspector to speed up your workflow, again!
+			</ol>
+		</div>
+		<br />
+
+		<div>
+			<style as-css>
+				/* Scoped CSS variables work fine! */
+				& { --color: hsl(264 80% 50%); font-family: sans-serif; margin: 20px }
+				div { margin: 20px 0 }
+				div ul { margin: 0; padding: 0 }
+				div ul li { display: inline-block; width: 110px; text-align: center; background: #444; border-radius: 5px; padding: 10px 2px; margin: 10px 10px }
+			</style>
+			<h2>Responsive Design 🔛 Resize the window!</h2>
+			🟢 = None specified.
+			<div>
+				<style as-css>
+					ul li[n1] { background: var(--color); }
+					@media sm-gt { ul li[n2] { background: var(--color); } }
+					@media md-gt { ul li[n3] { background: var(--color); } }
+					@media lg-gt { ul li[n4] { background: var(--color); } }
+					@media xl-gt { ul li[n5] { background: var(--color); } }
+					@media xx-gt { ul li[n6] { background: var(--color); } }
+				</style>
+				<div>📱 Mobile First! Add styles as size <strong>increases</strong>.</div>
+				<ul><li n1><strong>🟢 None</strong><li n2>sm-gt<li n3>md-gt<li n4>lg-gt<li n5>xl-gt<li n6>🏁 xx-gt</ul>
+			</div>
+			<div>
+				<style as-css>
+					/* You can also scope CSS variables! */
+					& { --color: hsl(0, 76%, 45%); font-family: sans-serif; margin: 20px }
+
+					/* You can also nest @media styles! */
+					ul li {
+						&[n1] { background: var(--color); }
+						@media xl-lt { &[n2] { background: var(--color); } }
+						@media lg-lt { &[n3] { background: var(--color); } }
+						@media md-lt { &[n4] { background: var(--color); } }
+						@media sm-lt { &[n5] { background: var(--color); } }
+						@media xs-lt { &[n6] { background: var(--color); } }
+					}
+				</style>
+				<div>💻 Desktop First! Add styles as size <strong>decreases</strong>.</div>
+				<ul><li n6>🏁 xs-lt<li n5>sm-lt<li n4>md-lt<li n3>lg-lt<li n2>xl-lt<li n1><strong>🟢 None</strong></ul>
+			</div>
+			<br />
+
+			<h2>HTMX Test</h2>
+			<script src="https://unpkg.com/htmx.org@1.9.6/dist/htmx.min.js" defer></script>
+			<div>Swapped DOM elements are styled instantly when they arrive.</div>
+			<button garlic hx-get="https://gnat.github.io/css-scope-inline/example.html" hx-select="button[garlic]" hx-swap="afterend">
+				<style as-css>
+					& { margin: 4px; padding: 10px 30px; min-width: 80px; background: hsl(264 80% 47%); border-bottom: 0.5rem solid hsl(264 80% 20%); }
+					&:hover { background: hsl(264 80% 60%); }
+				</style>
+				🧄
+			</button>
+			<button vampire hx-get="https://gnat.github.io/css-scope-inline/example.html" hx-select="button[vampire]" hx-swap="afterend">
+				<style as-css>
+					& { margin: 4px; padding: 10px 30px; min-width: 80px; background: hsl(150 80% 47%); border-bottom: 0.5rem solid hsl(150 80% 28%); }
+					&:hover { background: hsl(150 80% 60%); }
+				</style>
+				🧛
+			</button>
+		</div>
+
+		<button onClick="window.open('https://github.com/gnat/css-scope-inline/blob/main/example.html');" style="font-weight: bold; font-family: sans-serif;">🐱 View code for this page.</button>
+	</body>
+</html>
